@@ -9,46 +9,51 @@ import java.util.List;
 @Service
 public class JokesService {
     @Autowired
-  private  JokesDao jokesDao;
+    private JokesDao jokesDao;
+
     public List<Jokes> getAllJokes() {
         return jokesDao.getjokesList();
     }
 
 
-    public String Jokes(Jokes jokes) {
-return JokesDao.add(jokes)?"jokes added successfully":"an error occured while adding";
+    public String Jokesadd(Jokes jokes) {
+        return jokesDao.add(jokes) ? "jokes added successfully" : "an error occured while adding";
     }
-    public Jokes getById(int id) {
-        Jokes jokes=null;
-        boolean found =this.getAllJokes().stream().anyMatch(e->e.getId()==id);
-        if(found) jokes=this.getAllJokes().stream().filter(e->e.getId()==id).findFirst().get();
-        else{
-            System.out.println("no result found with is id");
-            return null;
-        }
-        return jokes;
-    }
-    public  String updateById(int id) {
-        List<Jokes> curJokes = this.getAllJokes();
-        for (Jokes jokes : curJokes) {
-            if (jokes.getId() == id) {
-                JokesDao.remove(jokes);
-                JokesDao.add(jokes);
-                return "update successfully";
-            }
-        }
-            return "no result fount in this id";
-        }
 
-        public  String delete(int id) {
-            Jokes jokes=null;
-            boolean found =this.getAllJokes().stream().anyMatch(e->e.getId()==id);
-            if(found) {
-                jokes = this.getAllJokes().stream().filter(e -> e.getId() == id).findFirst().get();
-                JokesDao.remove(jokes);
-                return "delete successfully";
-            }
-            return "no jokes found to delete";
+    public Jokes getById(String id) {
+        List<Jokes> curntjokes = getAllJokes();
+        for (Jokes found : curntjokes) {
+            if (found.getUserId().equals(id))
+
+                return found;
+        }
+        System.out.println("no result found with is id");
+        return null;
+    }
+
+    public String updateById(String id,Jokes user) {
+        boolean updateStatus = jokesDao.updateUserById(id,user);
+
+        if (updateStatus) {
+            return "User: " + id + " was updated!!!";
+        } else {
+            return "User: " + id + " does not exist!!!";
         }
     }
 
+    public String delete(String id) {
+        List<Jokes> curntjokes = getAllJokes();
+        for (Jokes found : curntjokes) {
+            if (found.getUserId().equals(id)) {
+                boolean status = jokesDao.remove(found);
+                if (status) {
+
+                    return "delete successfully";
+                }
+
+            }
+
+        }
+        return "no jokes found to delete";
+    }
+}

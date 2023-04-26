@@ -3,6 +3,7 @@ package com.geekster.jokes.controllers;
 import com.geekster.jokes.models.Jokes;
 import com.geekster.jokes.services.JokesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,21 +18,21 @@ public class JokesController {
         return jokesService.getAllJokes();
     }
     @GetMapping("/{id}")
-    public Jokes getJokesById(@PathVariable int id){
+    public Jokes getJokesById(@PathVariable String id){
     Jokes jokes = jokesService.getById(id);
     return jokes;
     }
 
     @PostMapping(value = "/saveJokes")
-    public String addJokes(@RequestBody Jokes jokes){
-    return JokesService.Jokes(jokes);
+    public String addJokes(@Validated @RequestBody Jokes jokes){
+    return jokesService.Jokesadd(jokes);
     }
     @PutMapping("/{id}")
-    public String updateJokes (@RequestBody int id){
-    return JokesService.updateById(id);
+    public String updateJokes (@PathVariable String id,@RequestBody Jokes user){
+    return jokesService.updateById(id,user);
     }
     @DeleteMapping("/{id}")
-    public String deleteJokes(@PathVariable int id){
-    return JokesService.delete(id);
+    public String deleteJokes(@PathVariable String id){
+    return jokesService.delete(id);
     }
 }
